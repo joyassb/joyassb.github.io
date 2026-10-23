@@ -23,8 +23,8 @@ window.PRODUCTOS = [
     "grosor": 10,
     "ley": "925",
     "imagen": "img/productos/pmvl3pin3-mvl3pin3.jpg",
-    "disponible": false,
+    "disponible": true,
     "destacado": true,
-    "estado": "vendido"
+    "estado": "disponible"
   }
 ];
