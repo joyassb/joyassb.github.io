@@ -14,19 +14,6 @@ window.PRODUCTOS = [
     "ley": "925"
   },
   {
-    "id": "ejemplo-2",
-    "nombre": "Colgante Cruz Lisa (ejemplo)",
-    "tipo": "colgante",
-    "precio": 19000,
-    "descripcion": "Producto de ejemplo: bórralo desde el mantenedor.",
-    "imagen": "",
-    "disponible": true,
-    "destacado": false,
-    "largo": null,
-    "grosor": null,
-    "ley": "950"
-  },
-  {
     "id": "ejemplo-3",
     "nombre": "Pulsera Grumet 4mm (ejemplo)",
     "tipo": "pulsera",
