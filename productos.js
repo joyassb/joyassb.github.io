@@ -15,7 +15,7 @@ window.PRODUCTOS = [
   },
   {
     "id": "pmvl3pin3",
-    "nombre": "Cadena Cartier h",
+    "nombre": "Cadena Cartier",
     "tipo": "cadena",
     "precio": 80000,
     "descripcion": "Cartier 1cm de grosor",
