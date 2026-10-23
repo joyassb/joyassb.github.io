@@ -14,19 +14,6 @@ window.PRODUCTOS = [
     "ley": "925"
   },
   {
-    "id": "ejemplo-1",
-    "nombre": "Cadena Cubana 5mm (ejemplo)",
-    "tipo": "cadena",
-    "precio": 45000,
-    "descripcion": "Tejido cubano. Producto de ejemplo: bórralo desde el mantenedor.",
-    "imagen": "",
-    "disponible": true,
-    "destacado": true,
-    "largo": 55,
-    "grosor": 5,
-    "ley": "925"
-  },
-  {
     "id": "ejemplo-2",
     "nombre": "Colgante Cruz Lisa (ejemplo)",
     "tipo": "colgante",
