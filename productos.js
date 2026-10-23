@@ -12,18 +12,5 @@ window.PRODUCTOS = [
     "largo": 60,
     "grosor": 4,
     "ley": "925"
-  },
-  {
-    "id": "ejemplo-3",
-    "nombre": "Pulsera Grumet 4mm (ejemplo)",
-    "tipo": "pulsera",
-    "precio": 29000,
-    "descripcion": "Tejido grumet. Producto de ejemplo: bórralo desde el mantenedor.",
-    "imagen": "",
-    "disponible": true,
-    "destacado": false,
-    "largo": 21,
-    "grosor": 4,
-    "ley": "925"
   }
 ];
