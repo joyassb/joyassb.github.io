@@ -52,6 +52,7 @@
     .form-actions { display: flex; gap: 10px; margin-top: 20px; }
     .form-actions .btn { flex: 1; padding: 13px 10px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .oferta-info { display: block; margin-top: 6px; color: var(--gold); font-size: 13px; min-height: 1em; }
     .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
     .status { padding: 14px 18px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 18px; font-size: 14px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
@@ -147,6 +148,10 @@
           <input type="number" id="precio" required min="0" step="500" inputmode="numeric" placeholder="25000">
         </div>
       </div>
+
+      <label for="oferta">Precio con descuento (opcional)</label>
+      <input type="number" id="oferta" min="0" step="500" inputmode="numeric" placeholder="Vacío = sin descuento">
+      <small class="oferta-info" id="ofertaInfo"></small>
 
       <div class="row3">
         <div>

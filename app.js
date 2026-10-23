@@ -31,7 +31,15 @@ const ESTADOS = { vendido: "Vendido", agotado: "Agotado" };
 const estado = (p) => p.estado || (p.disponible === false ? "agotado" : "disponible");
 const insignia = (p) =>
   ESTADOS[estado(p)] ? `<span class="badge out">${ESTADOS[estado(p)]}</span>`
+  : enOferta(p) ? `<span class="badge oferta">-${pctDescuento(p)}%</span>`
   : p.destacado ? `<span class="badge">Nuevo</span>` : "";
+// Descuento: "oferta" es el precio rebajado; solo cuenta si es menor al precio normal
+const enOferta = (p) => p.oferta > 0 && p.oferta < p.precio;
+const pctDescuento = (p) => Math.round((1 - p.oferta / p.precio) * 100);
+const precioHtml = (p) =>
+  enOferta(p)
+    ? `<s class="precio-antes">${clp(p.precio)}</s> <span class="precio-ahora">${clp(p.oferta)}</span>`
+    : clp(p.precio);
 const textoBoton = (p) => ({ vendido: "Pedir uno similar", agotado: "Consultar" })[estado(p)] || "Pedir por WhatsApp";
 
 const mensaje = (p) =>
@@ -44,7 +52,9 @@ const mensaje = (p) =>
     `Tipo: ${TIPOS[p.tipo] || p.tipo}`,
     ...medidas(p).map(([k, v]) => `${k}: ${v}`),
     p.descripcion ? `Detalle: ${p.descripcion}` : null,
-    `Precio: ${clp(p.precio)}`,
+    enOferta(p)
+      ? `Precio: ${clp(p.oferta)} (antes ${clp(p.precio)}, -${pctDescuento(p)}%)`
+      : `Precio: ${clp(p.precio)}`,
     "",
     estado(p) === "vendido" ? "¿Tienes algo similar?" : "¿Está disponible?",
   ].filter((l) => l !== null).join("\n");
@@ -63,7 +73,7 @@ function tarjeta(p) {
         <h3 class="card-name">${escapeHtml(p.nombre)}</h3>
         ${medidas(p).length ? `<p class="card-specs">${medidas(p).map(([k, v]) => escapeHtml(k === "Plata" ? `${k} ${v}` : v)).join(" · ")}</p>` : ""}
         ${p.descripcion ? `<p class="card-desc">${escapeHtml(p.descripcion)}</p>` : ""}
-        <span class="card-price">${clp(p.precio)}</span>
+        <span class="card-price">${precioHtml(p)}</span>
         <a class="btn btn-wa" href="${waLink(msg)}" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-wa"/></svg>
           ${textoBoton(p)}
@@ -74,7 +84,10 @@ function tarjeta(p) {
 
 function render(tipo) {
   const grid = document.getElementById("grid");
-  const lista = tipo === "todos" ? productos : productos.filter((p) => p.tipo === tipo);
+  const lista =
+    tipo === "todos" ? productos
+    : tipo === "oferta" ? productos.filter((p) => enOferta(p) && estado(p) === "disponible")
+    : productos.filter((p) => p.tipo === tipo);
   grid.innerHTML = lista.length
     ? lista.map(tarjeta).join("")
     : `<p class="empty">Pronto habrá nuevas piezas aquí. Escríbeme por WhatsApp para ver lo disponible.</p>`;
@@ -104,7 +117,7 @@ function pintarDetalle(p) {
   modal.querySelector(".det-desc").textContent = p.descripcion || "";
   modal.querySelector(".det-specs").innerHTML = medidas(p)
     .map(([k, v]) => `<div><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join("");
-  modal.querySelector(".det-price").textContent = clp(p.precio);
+  modal.querySelector(".det-price").innerHTML = precioHtml(p);
   const wa = modal.querySelector(".btn-wa");
   wa.href = waLink(mensaje(p));
   wa.lastChild.textContent = " " + (estado(p) === "agotado" ? "Consultar por WhatsApp" : textoBoton(p));
@@ -179,6 +192,8 @@ s.onload = s.onerror = () => {
   productos = (Array.isArray(window.PRODUCTOS) ? window.PRODUCTOS : []).map((p) => ({ ...p, nombre: mayuscula(p.nombre) }));
   // los vendidos van al final del catálogo
   productos = [...productos.filter((p) => estado(p) !== "vendido"), ...productos.filter((p) => estado(p) === "vendido")];
+  // el filtro "Ofertas" aparece solo si hay alguna
+  document.getElementById("chipOferta").hidden = !productos.some((p) => enOferta(p) && estado(p) === "disponible");
   render("todos");
   sincronizarConUrl();
 };

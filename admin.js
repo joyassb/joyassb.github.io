@@ -310,6 +310,7 @@ function limpiarForm() {
   editId = null;
   $("form").reset();
   $("estado").value = "disponible";
+  $("ofertaInfo").textContent = "";
   mostrarFoto("");
   $("formTitle").textContent = "Nuevo producto";
   $("submit").textContent = "Agregar";
@@ -324,6 +325,8 @@ function editar(id) {
   $("nombre").value = p.nombre;
   $("tipo").value = p.tipo;
   $("precio").value = p.precio;
+  $("oferta").value = p.oferta ?? "";
+  infoOferta();
   $("descripcion").value = p.descripcion || "";
   $("largo").value = p.largo ?? "";
   $("grosor").value = p.grosor ?? "";
@@ -340,12 +343,24 @@ function editar(id) {
 
 $("cancel").addEventListener("click", limpiarForm);
 
+// Muestra el % de descuento mientras se escribe
+function infoOferta() {
+  const precio = Number($("precio").value), oferta = Number($("oferta").value);
+  $("ofertaInfo").textContent =
+    $("oferta").value === "" || !precio ? ""
+    : oferta < precio ? `Descuento de ${Math.round((1 - oferta / precio) * 100)}%`
+    : "Debe ser menor que el precio normal";
+}
+$("precio").addEventListener("input", infoOferta);
+$("oferta").addEventListener("input", infoOferta);
+
 $("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const datos = {
     nombre: mayuscula($("nombre").value.trim()),
     tipo: $("tipo").value,
     precio: Math.round(Number($("precio").value)),
+    oferta: $("oferta").value === "" ? null : Math.round(Number($("oferta").value)),
     descripcion: $("descripcion").value.trim(),
     // medidas opcionales: vacías se guardan como null
     largo: $("largo").value === "" ? null : Number($("largo").value),
@@ -357,6 +372,11 @@ $("form").addEventListener("submit", async (e) => {
     destacado: $("destacado").checked,
   };
   if (!datos.nombre || !(datos.precio >= 0)) return;
+  if (datos.oferta !== null && !(datos.oferta < datos.precio)) {
+    toast("El precio con descuento debe ser menor que el precio normal", 4000);
+    $("oferta").focus();
+    return;
+  }
 
   const id = editId || "p" + Date.now().toString(36);
   const fotoAnterior = editId ? productos.find((p) => p.id === editId)?.imagen : "";
@@ -404,7 +424,7 @@ function render() {
         <div class="thumb">${p.imagen ? `<img src="${escapeHtml(urlImg(p.imagen))}" alt="" loading="lazy">` : "sin foto"}</div>
         <div class="meta">
           <strong>${escapeHtml(p.nombre)}</strong>
-          <small>${[TIPOS[p.tipo], clp(p.precio), p.ley && `Plata ${p.ley}`, p.largo && `${p.largo} cm`, p.grosor && `${p.grosor} mm`]
+          <small>${[TIPOS[p.tipo], p.oferta ? `${clp(p.precio)} → ${clp(p.oferta)}` : clp(p.precio), p.ley && `Plata ${p.ley}`, p.largo && `${p.largo} cm`, p.grosor && `${p.grosor} mm`]
             .filter(Boolean).map(escapeHtml).join(" · ")}</small>
           ${ESTADOS[estado(p)] ? `<span class="tag">${ESTADOS[estado(p)]}</span>` : ""}
           ${p.destacado ? '<span class="tag">Nuevo</span>' : ""}
