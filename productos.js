@@ -31,10 +31,10 @@ window.PRODUCTOS = [
   },
   {
     "id": "pmvl2hj8m",
-    "nombre": "Cadena Caracol + Cadena Grumet + Colgantes Mercedes",
+    "nombre": "Colgante Mercedes + Cadena Caracol o Cadena Grumet",
     "tipo": "cadena",
     "precio": 30000,
-    "descripcion": "valor oferta c/u",
+    "descripcion": "Valor oferta c/u (Cadena + Colgante)",
     "imagen": "img/productos/pmvl2hj8m-mvl522bo.jpg",
     "disponible": true,
     "destacado": true,
