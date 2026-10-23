@@ -11,6 +11,7 @@ const CFG_KEY = "joyassb-github";
 
 const $ = (id) => document.getElementById(id);
 const clp = (n) => "$" + Number(n).toLocaleString("es-CL");
+const mayuscula = (s) => s.charAt(0).toLocaleUpperCase("es-CL") + s.slice(1);
 const escapeHtml = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
@@ -340,7 +341,7 @@ $("cancel").addEventListener("click", limpiarForm);
 $("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const datos = {
-    nombre: $("nombre").value.trim(),
+    nombre: mayuscula($("nombre").value.trim()),
     tipo: $("tipo").value,
     precio: Math.round(Number($("precio").value)),
     descripcion: $("descripcion").value.trim(),

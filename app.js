@@ -4,6 +4,7 @@ const WHATSAPP = "56932998373";
 const TIPOS = { cadena: "Cadena", colgante: "Colgante", pulsera: "Pulsera" };
 
 const clp = (n) => "$" + Number(n).toLocaleString("es-CL");
+const mayuscula = (s) => String(s ?? "").charAt(0).toLocaleUpperCase("es-CL") + String(s ?? "").slice(1);
 
 const waLink = (msg) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 
@@ -170,7 +171,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 const s = document.createElement("script");
 s.src = "productos.js?v=" + Date.now();
 s.onload = s.onerror = () => {
-  productos = Array.isArray(window.PRODUCTOS) ? window.PRODUCTOS : [];
+  productos = (Array.isArray(window.PRODUCTOS) ? window.PRODUCTOS : []).map((p) => ({ ...p, nombre: mayuscula(p.nombre) }));
   render("todos");
   sincronizarConUrl();
 };
