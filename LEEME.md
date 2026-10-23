@@ -1,6 +1,9 @@
 # JoyasSB — sitio web
 
-El sitio vive en **GitHub Pages** (gratis). El mantenedor (`admin.html`) guarda directo en GitHub,
+El sitio vive en **GitHub Pages** (gratis): **https://joyassb.github.io**
+Repositorio: https://github.com/joyassb/joyassb.github.io (organización `joyassb`).
+
+El mantenedor (`admin.html`) guarda directo en GitHub,
 así que puedes agregar productos desde el celular y el sitio se actualiza solo en 1–2 minutos.
 
 ## Archivos
@@ -17,40 +20,34 @@ así que puedes agregar productos desde el celular y el sitio se actualiza solo 
 
 ## Configuración (una sola vez)
 
-### 1. Crear la cuenta y el repositorio
-1. Crea una cuenta en https://github.com/signup. Tu **usuario** será parte de la dirección del sitio.
-2. Arriba a la derecha: **+ → New repository**.
-   - Repository name: `joyassb`
-   - Marca **Public** (GitHub Pages gratis lo requiere)
-   - Presiona **Create repository**.
+> Los pasos 1–3 ya están hechos. Quedan como referencia.
 
-### 2. Subir los archivos del sitio
-En la página del repositorio recién creado, haz clic en **uploading an existing file**,
-arrastra **todos los archivos de esta carpeta** y presiona **Commit changes**.
+### 1. Organización y repositorio
+- Organización gratuita `joyassb` (dueña: cuenta `ssstfnyy`).
+- Repositorio **público** `joyassb.github.io` dentro de ella.
 
-> Windows esconde `.nojekyll`. Si no se sube, no pasa nada: el sitio funciona igual.
+### 2. Archivos del sitio
+Están en el repositorio. Esta carpeta del computador es una copia; los productos nuevos
+se guardan directo en GitHub (para traerlos a la carpeta: `git pull`).
 
-### 3. Activar la página
-En el repositorio: **Settings → Pages**.
-- Source: **Deploy from a branch**
-- Branch: **main**, carpeta **/ (root)** → **Save**
-
-En 1–2 minutos tu sitio queda en: `https://TU-USUARIO.github.io/joyassb/`
+### 3. Página activada
+En el repositorio: **Settings → Pages** → Source: **Deploy from a branch**, Branch **main**, **/ (root)**.
 
 ### 4. Crear el token para el mantenedor
 El token es la "llave" que permite al mantenedor guardar productos. Es como una contraseña: no lo compartas.
 
 1. Abre https://github.com/settings/personal-access-tokens/new
-2. **Token name:** `mantenedor joyassb`
-3. **Expiration:** elige la más larga disponible y anota la fecha. Cuando venza, creas otro igual.
-4. **Repository access:** *Only select repositories* → elige `joyassb`.
-5. **Permissions → Repository permissions → Contents:** cambia a **Read and write**.
-6. **Generate token** y **copia el token** (empieza con `github_pat_`). GitHub lo muestra una sola vez.
+2. **Resource owner:** elige **joyassb** (la organización, no tu usuario).
+3. **Token name:** `mantenedor joyassb`
+4. **Expiration:** elige la más larga disponible y anota la fecha. Cuando venza, creas otro igual.
+5. **Repository access:** *Only select repositories* → elige `joyassb.github.io`.
+6. **Permissions → Repository permissions → Contents:** cambia a **Read and write**.
+7. **Generate token** y **copia el token** (empieza con `github_pat_`). GitHub lo muestra una sola vez.
    Guárdalo en las notas de tu celular o en tu gestor de contraseñas.
 
 ### 5. Conectar el mantenedor
-1. En el celular abre `https://TU-USUARIO.github.io/joyassb/admin.html`
-2. Escribe tu usuario, el repositorio (`joyassb`) y pega el token → **Conectar**.
+1. En el celular abre `https://joyassb.github.io/admin.html`
+2. Usuario y repositorio ya vienen escritos. Pega el token → **Conectar**.
 3. Tip: agrégalo a la pantalla de inicio (Safari → Compartir → *Agregar a inicio*) para abrirlo como app.
 
 Repite el paso 5 en cada aparato que quieras usar.
