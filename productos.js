@@ -12,7 +12,8 @@ window.PRODUCTOS = [
     "imagen": "img/productos/pmvl4xyxk-mvl4xyxl.jpg",
     "estado": "disponible",
     "disponible": true,
-    "destacado": true
+    "destacado": true,
+    "oferta": 20000
   },
   {
     "id": "pmvl4nut2",
