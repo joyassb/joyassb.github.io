@@ -36,10 +36,14 @@ const insignia = (p) =>
 // Descuento: "oferta" es el precio rebajado; solo cuenta si es menor al precio normal
 const enOferta = (p) => p.oferta > 0 && p.oferta < p.precio;
 const pctDescuento = (p) => Math.round((1 - p.oferta / p.precio) * 100);
+// "c/u" o "por lote" junto al precio (fotos con varias piezas)
+const UNIDADES = { cu: "c/u", lote: "por lote" };
+const unidad = (p) => (UNIDADES[p.unidad] ? ` ${UNIDADES[p.unidad]}` : "");
 const precioHtml = (p) =>
-  enOferta(p)
+  (enOferta(p)
     ? `<s class="precio-antes">${clp(p.precio)}</s> <span class="precio-ahora">${clp(p.oferta)}</span>`
-    : clp(p.precio);
+    : clp(p.precio)) +
+  (UNIDADES[p.unidad] ? ` <span class="precio-unidad">${UNIDADES[p.unidad]}</span>` : "");
 const textoBoton = (p) => ({ vendido: "Pedir uno similar", agotado: "Consultar" })[estado(p)] || "Pedir por WhatsApp";
 
 const mensaje = (p) =>
@@ -53,8 +57,8 @@ const mensaje = (p) =>
     ...medidas(p).map(([k, v]) => `${k}: ${v}`),
     p.descripcion ? `Detalle: ${p.descripcion}` : null,
     enOferta(p)
-      ? `Precio: ${clp(p.oferta)} (antes ${clp(p.precio)}, -${pctDescuento(p)}%)`
-      : `Precio: ${clp(p.precio)}`,
+      ? `Precio: ${clp(p.oferta)}${unidad(p)} (antes ${clp(p.precio)}, -${pctDescuento(p)}%)`
+      : `Precio: ${clp(p.precio)}${unidad(p)}`,
     "",
     estado(p) === "vendido" ? "¿Tienes algo similar?" : "¿Está disponible?",
   ].filter((l) => l !== null).join("\n");

@@ -152,8 +152,20 @@
         </div>
       </div>
 
-      <label for="oferta">Precio con descuento (opcional)</label>
-      <input type="number" id="oferta" min="0" step="500" inputmode="numeric" placeholder="Vacío = sin descuento">
+      <div class="row">
+        <div>
+          <label for="unidad">El precio es</label>
+          <select id="unidad">
+            <option value="">Normal</option>
+            <option value="cu">c/u (cada una)</option>
+            <option value="lote">Por lote</option>
+          </select>
+        </div>
+        <div>
+          <label for="oferta">Con descuento</label>
+          <input type="number" id="oferta" min="0" step="500" inputmode="numeric" placeholder="Opcional">
+        </div>
+      </div>
       <small class="oferta-info" id="ofertaInfo"></small>
 
       <div class="row3">

@@ -12,6 +12,7 @@ const CFG_KEY = "joyassb-github";
 const $ = (id) => document.getElementById(id);
 const clp = (n) => "$" + Number(n).toLocaleString("es-CL");
 const ESTADOS = { vendido: "Vendido", agotado: "Agotado" };
+const UNIDADES = { cu: "c/u", lote: "por lote" }; // texto junto al precio
 const estado = (p) => p.estado || (p.disponible === false ? "agotado" : "disponible");
 const mayuscula = (s) => s.charAt(0).toLocaleUpperCase("es-CL") + s.slice(1);
 const escapeHtml = (s) =>
@@ -326,6 +327,7 @@ function editar(id) {
   $("tipo").value = p.tipo;
   $("precio").value = p.precio;
   $("oferta").value = p.oferta ?? "";
+  $("unidad").value = p.unidad || "";
   infoOferta();
   $("descripcion").value = p.descripcion || "";
   $("largo").value = p.largo ?? "";
@@ -361,6 +363,7 @@ $("form").addEventListener("submit", async (e) => {
     tipo: $("tipo").value,
     precio: Math.round(Number($("precio").value)),
     oferta: $("oferta").value === "" ? null : Math.round(Number($("oferta").value)),
+    unidad: $("unidad").value || null,
     descripcion: $("descripcion").value.trim(),
     // medidas opcionales: vacías se guardan como null
     largo: $("largo").value === "" ? null : Number($("largo").value),
@@ -425,7 +428,7 @@ function render() {
         <div class="thumb">${p.imagen ? `<img src="${escapeHtml(urlImg(p.imagen))}" alt="" loading="lazy">` : "sin foto"}</div>
         <div class="meta">
           <strong>${escapeHtml(p.nombre)}</strong>
-          <small>${[TIPOS[p.tipo], p.oferta ? `${clp(p.precio)} → ${clp(p.oferta)}` : clp(p.precio), p.ley && `Plata ${p.ley}`, p.largo && `${p.largo} cm`, p.grosor && `${p.grosor} mm`]
+          <small>${[TIPOS[p.tipo], (p.oferta ? `${clp(p.precio)} → ${clp(p.oferta)}` : clp(p.precio)) + (UNIDADES[p.unidad] ? ` ${UNIDADES[p.unidad]}` : ""), p.ley && `Plata ${p.ley}`, p.largo && `${p.largo} cm`, p.grosor && `${p.grosor} mm`]
             .filter(Boolean).map(escapeHtml).join(" · ")}</small>
           ${ESTADOS[estado(p)] ? `<span class="tag">${ESTADOS[estado(p)]}</span>` : ""}
           ${p.destacado ? '<span class="tag">Nuevo</span>' : ""}
@@ -659,16 +662,19 @@ async function dibujarRedes(p, formato) {
   const final = clp(oferta ? p.oferta : p.precio);
   ctx.font = `300 ${88 * s}px "Montserrat"`;
   const wFinal = ctx.measureText(final).width;
-  let xFinal = cx - wFinal / 2;
+  const suf = UNIDADES[p.unidad] || "", fontSuf = `400 ${38 * s}px "Montserrat"`, gap = 22 * s;
+  ctx.font = fontSuf;
+  const wSuf = suf ? ctx.measureText(suf).width + gap : 0;
+  ctx.font = `300 ${46 * s}px "Montserrat"`;
+  const antes = clp(p.precio), wAntes = oferta ? ctx.measureText(antes).width + gap : 0;
+  const x0 = cx - (wAntes + wFinal + wSuf) / 2;
   if (oferta) {
-    ctx.font = `300 ${46 * s}px "Montserrat"`;
-    const antes = clp(p.precio), wAntes = ctx.measureText(antes).width, gap = 26 * s;
-    const x0 = cx - (wAntes + gap + wFinal) / 2;
     texto(ctx, antes, x0, y, { font: ctx.font, color: "#8a8a8a", align: "left" });
     ctx.fillStyle = "#8a8a8a";
-    ctx.fillRect(x0, y - 16 * s, wAntes, 3 * s);
-    xFinal = x0 + wAntes + gap;
+    ctx.fillRect(x0, y - 16 * s, wAntes - gap, 3 * s);
   }
+  const xFinal = x0 + wAntes;
+  if (suf) texto(ctx, suf, xFinal + wFinal + gap, y, { font: fontSuf, color: vendido ? "#8a8a8a" : ORO[1], align: "left" });
   texto(ctx, final, xFinal, y, {
     font: `300 ${88 * s}px "Montserrat"`,
     color: vendido ? "#8a8a8a" : oroLineal(ctx, xFinal, y - 80 * s, xFinal + wFinal, y),

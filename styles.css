@@ -249,6 +249,7 @@ section.block.alt { background: var(--bg-2); }
 .card.vendido .precio-ahora, .det-box.vendido .precio-ahora { color: var(--muted); }
 .precio-antes { color: var(--muted); font-size: .7em; margin-right: 6px; }
 .precio-ahora { color: var(--gold); }
+.precio-unidad { font-size: .62em; color: var(--muted); letter-spacing: .04em; white-space: nowrap; }
 .badge.oferta { background: #a3221c; color: #fff; }
 .chip-oferta { border-color: #a3221c; color: #ff8a80; }
 .chip-oferta.active { background: #a3221c; border-color: #a3221c; color: #fff; }
