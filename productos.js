@@ -12,7 +12,7 @@ window.PRODUCTOS = [
     "imagen": "img/productos/pmvl4nut2-mvl4nut2.jpg",
     "estado": "disponible",
     "disponible": true,
-    "destacado": false
+    "destacado": true
   },
   {
     "id": "pmvl2hj8m",
