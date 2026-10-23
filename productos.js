@@ -1,19 +1,6 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
-    "id": "pmvl3pin3",
-    "nombre": "Cadena Cartier",
-    "tipo": "cadena",
-    "precio": 80000,
-    "descripcion": "Cartier 1cm de grosor",
-    "largo": 63,
-    "grosor": 10,
-    "ley": "925",
-    "imagen": "img/productos/pmvl3pin3-mvl3pin3.jpg",
-    "disponible": true,
-    "destacado": true
-  },
-  {
     "id": "pmvl2hj8m",
     "nombre": "Cadena Caracol + Cadena Grumet + Colgantes Mercedes",
     "tipo": "cadena",
@@ -25,5 +12,18 @@ window.PRODUCTOS = [
     "largo": 60,
     "grosor": 4,
     "ley": "925"
+  },
+  {
+    "id": "pmvl3pin3",
+    "nombre": "Cadena Cartier",
+    "tipo": "cadena",
+    "precio": 80000,
+    "descripcion": "Cartier 1cm de grosor",
+    "largo": 63,
+    "grosor": 10,
+    "ley": "925",
+    "imagen": "img/productos/pmvl3pin3-mvl3pin3.jpg",
+    "disponible": true,
+    "destacado": true
   }
 ];
