@@ -28,6 +28,8 @@
     .checks { display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap; }
     .checks label { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--text); }
     .checks input { width: 18px; height: 18px; accent-color: #ddd; }
+    .checks select.estado { width: auto; padding: 8px 10px; }
+    .item.vendido .thumb img { filter: grayscale(1) brightness(.6); }
     .photo {
       aspect-ratio: 1/1; border: 1px dashed #444; border-radius: var(--radius); background: var(--bg);
       display: grid; place-items: center; overflow: hidden; cursor: pointer; color: var(--muted); font-size: 14px; text-align: center; padding: 10px;
@@ -170,7 +172,13 @@
       <textarea id="descripcion" maxlength="200" placeholder="Ej: Tejido cubano, cierre de mosquetón"></textarea>
 
       <div class="checks">
-        <label><input type="checkbox" id="disponible" checked> Disponible</label>
+        <label>Estado
+          <select id="estado" class="estado">
+            <option value="disponible">Disponible</option>
+            <option value="vendido">Vendido</option>
+            <option value="agotado">Agotado</option>
+          </select>
+        </label>
         <label><input type="checkbox" id="destacado"> Marcar como “Nuevo”</label>
       </div>
 

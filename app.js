@@ -25,9 +25,20 @@ const medidas = (p) =>
     p.grosor && ["Grosor", `${num(p.grosor)} mm`],
   ].filter(Boolean);
 
+// Estado: disponible, vendido (se sigue mostrando como referencia) o agotado.
+// Productos antiguos solo tenían "disponible: false", que equivale a agotado.
+const ESTADOS = { vendido: "Vendido", agotado: "Agotado" };
+const estado = (p) => p.estado || (p.disponible === false ? "agotado" : "disponible");
+const insignia = (p) =>
+  ESTADOS[estado(p)] ? `<span class="badge out">${ESTADOS[estado(p)]}</span>`
+  : p.destacado ? `<span class="badge">Nuevo</span>` : "";
+const textoBoton = (p) => ({ vendido: "Pedir uno similar", agotado: "Consultar" })[estado(p)] || "Pedir por WhatsApp";
+
 const mensaje = (p) =>
   [
-    "Hola JoyasSB 👋 Me interesa este producto:",
+    estado(p) === "vendido"
+      ? "Hola JoyasSB 👋 Vi este producto vendido en tu catálogo:"
+      : "Hola JoyasSB 👋 Me interesa este producto:",
     "",
     `*${p.nombre}*`,
     `Tipo: ${TIPOS[p.tipo] || p.tipo}`,
@@ -35,23 +46,18 @@ const mensaje = (p) =>
     p.descripcion ? `Detalle: ${p.descripcion}` : null,
     `Precio: ${clp(p.precio)}`,
     "",
-    "¿Está disponible?",
+    estado(p) === "vendido" ? "¿Tienes algo similar?" : "¿Está disponible?",
   ].filter((l) => l !== null).join("\n");
 
 function tarjeta(p) {
   const tipo = TIPOS[p.tipo] || p.tipo;
-  const agotado = p.disponible === false;
   const msg = mensaje(p);
   const img = p.imagen
     ? `<img src="${escapeHtml(p.imagen)}" alt="${escapeHtml(p.nombre)}" loading="lazy">`
     : PLACEHOLDER;
-  const badge = agotado
-    ? `<span class="badge out">Agotado</span>`
-    : p.destacado ? `<span class="badge">Nuevo</span>` : "";
-
   return `
-    <article class="card${agotado ? " sold" : ""}" data-id="${escapeHtml(p.id)}" tabindex="0" aria-label="Ver detalle de ${escapeHtml(p.nombre)}">
-      <div class="card-img">${img}${badge}</div>
+    <article class="card${estado(p) !== "disponible" ? " sold" : ""}${estado(p) === "vendido" ? " vendido" : ""}" data-id="${escapeHtml(p.id)}" tabindex="0" aria-label="Ver detalle de ${escapeHtml(p.nombre)}">
+      <div class="card-img">${img}${insignia(p)}</div>
       <div class="card-body">
         <span class="card-type">${escapeHtml(tipo)}</span>
         <h3 class="card-name">${escapeHtml(p.nombre)}</h3>
@@ -60,7 +66,7 @@ function tarjeta(p) {
         <span class="card-price">${clp(p.precio)}</span>
         <a class="btn btn-wa" href="${waLink(msg)}" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-wa"/></svg>
-          ${agotado ? "Consultar" : "Pedir por WhatsApp"}
+          ${textoBoton(p)}
         </a>
       </div>
     </article>`;
@@ -90,10 +96,9 @@ const HASH = "#producto-";
 
 function pintarDetalle(p) {
   const tipo = TIPOS[p.tipo] || p.tipo;
-  const agotado = p.disponible === false;
+  modal.querySelector(".det-box").classList.toggle("vendido", estado(p) === "vendido");
   modal.querySelector(".det-img").innerHTML =
-    (p.imagen ? `<img src="${escapeHtml(p.imagen)}" alt="${escapeHtml(p.nombre)}">` : PLACEHOLDER) +
-    (agotado ? `<span class="badge out">Agotado</span>` : p.destacado ? `<span class="badge">Nuevo</span>` : "");
+    (p.imagen ? `<img src="${escapeHtml(p.imagen)}" alt="${escapeHtml(p.nombre)}">` : PLACEHOLDER) + insignia(p);
   modal.querySelector(".card-type").textContent = tipo;
   modal.querySelector(".det-name").textContent = p.nombre;
   modal.querySelector(".det-desc").textContent = p.descripcion || "";
@@ -102,7 +107,7 @@ function pintarDetalle(p) {
   modal.querySelector(".det-price").textContent = clp(p.precio);
   const wa = modal.querySelector(".btn-wa");
   wa.href = waLink(mensaje(p));
-  wa.lastChild.textContent = agotado ? " Consultar por WhatsApp" : " Pedir por WhatsApp";
+  wa.lastChild.textContent = " " + (estado(p) === "agotado" ? "Consultar por WhatsApp" : textoBoton(p));
 }
 
 function mostrarDetalle(id) {
@@ -172,6 +177,8 @@ const s = document.createElement("script");
 s.src = "productos.js?v=" + Date.now();
 s.onload = s.onerror = () => {
   productos = (Array.isArray(window.PRODUCTOS) ? window.PRODUCTOS : []).map((p) => ({ ...p, nombre: mayuscula(p.nombre) }));
+  // los vendidos van al final del catálogo
+  productos = [...productos.filter((p) => estado(p) !== "vendido"), ...productos.filter((p) => estado(p) === "vendido")];
   render("todos");
   sincronizarConUrl();
 };

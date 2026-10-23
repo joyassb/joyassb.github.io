@@ -11,6 +11,8 @@ const CFG_KEY = "joyassb-github";
 
 const $ = (id) => document.getElementById(id);
 const clp = (n) => "$" + Number(n).toLocaleString("es-CL");
+const ESTADOS = { vendido: "Vendido", agotado: "Agotado" };
+const estado = (p) => p.estado || (p.disponible === false ? "agotado" : "disponible");
 const mayuscula = (s) => s.charAt(0).toLocaleUpperCase("es-CL") + s.slice(1);
 const escapeHtml = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -307,7 +309,7 @@ $("file").addEventListener("change", (e) => {
 function limpiarForm() {
   editId = null;
   $("form").reset();
-  $("disponible").checked = true;
+  $("estado").value = "disponible";
   mostrarFoto("");
   $("formTitle").textContent = "Nuevo producto";
   $("submit").textContent = "Agregar";
@@ -326,7 +328,7 @@ function editar(id) {
   $("largo").value = p.largo ?? "";
   $("grosor").value = p.grosor ?? "";
   $("ley").value = p.ley || "";
-  $("disponible").checked = p.disponible !== false;
+  $("estado").value = estado(p);
   $("destacado").checked = !!p.destacado;
   mostrarFoto(p.imagen);
   $("formTitle").textContent = "Editar producto";
@@ -350,7 +352,8 @@ $("form").addEventListener("submit", async (e) => {
     grosor: $("grosor").value === "" ? null : Number($("grosor").value),
     ley: $("ley").value || null,
     imagen: fotoActual,
-    disponible: $("disponible").checked,
+    estado: $("estado").value,
+    disponible: $("estado").value === "disponible",
     destacado: $("destacado").checked,
   };
   if (!datos.nombre || !(datos.precio >= 0)) return;
@@ -376,6 +379,8 @@ const ICON = {
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
   up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 15l6-6 6 6"/></svg>',
   down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9l6 6 6-6"/></svg>',
+  vendido: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>',
   del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>',
 };
 
@@ -395,18 +400,19 @@ function render() {
 
   $("list").innerHTML = productos.length
     ? productos.map((p, i) => `
-      <div class="item${p.id === editId ? " editing" : ""}">
+      <div class="item${p.id === editId ? " editing" : ""}${estado(p) === "vendido" ? " vendido" : ""}">
         <div class="thumb">${p.imagen ? `<img src="${escapeHtml(urlImg(p.imagen))}" alt="" loading="lazy">` : "sin foto"}</div>
         <div class="meta">
           <strong>${escapeHtml(p.nombre)}</strong>
           <small>${[TIPOS[p.tipo], clp(p.precio), p.ley && `Plata ${p.ley}`, p.largo && `${p.largo} cm`, p.grosor && `${p.grosor} mm`]
             .filter(Boolean).map(escapeHtml).join(" · ")}</small>
-          ${p.disponible === false ? '<span class="tag">Agotado</span>' : ""}
+          ${ESTADOS[estado(p)] ? `<span class="tag">${ESTADOS[estado(p)]}</span>` : ""}
           ${p.destacado ? '<span class="tag">Nuevo</span>' : ""}
         </div>
         <div class="acts">
           <button class="icon-btn" title="Subir" data-act="up" data-i="${i}" ${i === 0 ? "disabled" : ""}>${ICON.up}</button>
           <button class="icon-btn" title="Bajar" data-act="down" data-i="${i}" ${i === productos.length - 1 ? "disabled" : ""}>${ICON.down}</button>
+          <button class="icon-btn" title="${estado(p) === "vendido" ? "Volver a disponible" : "Marcar como vendido"}" data-act="vendido" data-i="${i}">${estado(p) === "vendido" ? ICON.undo : ICON.vendido}</button>
           <button class="icon-btn" title="Editar" data-act="edit" data-i="${i}">${ICON.edit}</button>
           <button class="icon-btn del" title="Borrar" data-act="del" data-i="${i}">${ICON.del}</button>
         </div>
@@ -428,6 +434,15 @@ $("list").addEventListener("click", async (e) => {
   const p = productos[Number(b.dataset.i)];
   switch (b.dataset.act) {
     case "edit": return editar(p.id);
+    case "vendido": {
+      const nuevo = estado(p) === "vendido" ? "disponible" : "vendido";
+      const ok = await ocupado("Guardando…", () => publicar(
+        (l) => l.map((x) => (x.id === p.id ? { ...x, estado: nuevo, disponible: nuevo === "disponible" } : x)),
+        `${nuevo === "vendido" ? "Vendido" : "Disponible"}: ${p.nombre}`,
+      ));
+      if (ok) toast(nuevo === "vendido" ? "Marcado como vendido ✓" : "Vuelve a estar disponible ✓");
+      break;
+    }
     case "del":
       if (!confirm(`¿Borrar "${p.nombre}"?`)) return;
       if (await ocupado("Borrando…", async () => {
