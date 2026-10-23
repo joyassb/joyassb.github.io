@@ -1,6 +1,20 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvl4xyxk",
+    "nombre": "Pulsera Doblegrumett",
+    "tipo": "pulsera",
+    "precio": 25000,
+    "descripcion": "",
+    "largo": 21,
+    "grosor": 7,
+    "ley": "925",
+    "imagen": "img/productos/pmvl4xyxk-mvl4xyxl.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvl4nut2",
     "nombre": "Cadena Cartier + Colgante Mercedes",
     "tipo": "cadena",
