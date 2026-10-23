@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JoyasSB — Joyas de plata 925</title>
+  <meta name="description" content="JoyasSB: cadenas, colgantes y pulseras de plata 925. Luce, regala, negocia. Pide por WhatsApp.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:title" content="JoyasSB — Joyas de plata 925">
+  <meta property="og:description" content="Cadenas, colgantes y pulseras de plata 925. Luce, regala, negocia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,500;1,700;1,800&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== Encabezado ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="#inicio" class="logo" aria-label="JoyasSB, inicio">
+        <svg class="crown" viewBox="0 0 120 72"><use href="#i-crown"/></svg>
+        <span class="sb gold">SB</span>
+        <small>Joyas<br>de plata</small>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#envios">Envíos y pagos</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Portada ===== -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="brand">
+        <svg class="crown" viewBox="0 0 120 72"><use href="#i-crown"/></svg>
+        <span class="sb gold">SB</span>
+        <span class="rule"></span>
+        <span class="tag">Joyas de plata</span>
+      </div>
+      <h1>luce, regala o negocia</h1>
+      <p class="metal">PLATA 925 · 950 · 980</p>
+      <p class="lead">Cadenas, colgantes y pulseras con estilo urbano y terminación fina. Para ti, para él, para ella o para sorprender a alguien especial.</p>
+      <div class="hero-actions">
+        <a href="#catalogo" class="btn btn-solid">Ver catálogo</a>
+        <a href="#" class="btn js-wa" data-msg="Hola JoyasSB 👋 Quiero más información sobre sus joyas.">
+          <svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-wa"/></svg> Escríbeme
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <ul>
+      <li>Plata ley 925 · 950 · 980</li>
+      <li>Diseños exclusivos</li>
+      <li>Confiable y seguro</li>
+      <li>Entregas en Valparaíso</li>
+      <li>Envíos a todo Chile</li>
+    </ul>
+  </div>
+
+  <!-- ===== Catálogo ===== -->
+  <section class="block" id="catalogo">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Colección</p>
+        <h2 class="section-title">Catálogo</h2>
+        <p>Elige tu pieza y pídela directo por WhatsApp. El mensaje se escribe solo.</p>
+      </div>
+      <div class="filters" id="filters">
+        <button class="chip active" data-tipo="todos">Todos</button>
+        <button class="chip" data-tipo="cadena">Cadenas</button>
+        <button class="chip" data-tipo="colgante">Colgantes</button>
+        <button class="chip" data-tipo="pulsera">Pulseras</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== Sobre mí ===== -->
+  <section class="block alt" id="sobre-mi">
+    <div class="container about">
+      <div class="about-visual">
+        <!-- Para poner tu foto: reemplaza el bloque <div class="brand"> por  <img src="img/sobre-mi.jpg" alt="JoyasSB"> -->
+        <div class="brand">
+          <svg class="crown" viewBox="0 0 120 72"><use href="#i-crown"/></svg>
+          <span class="sb gold">SB</span>
+          <span class="rule"></span>
+          <span class="tag">Joyas de plata</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="eyebrow">Sobre mí</p>
+        <h2 class="section-title">Detrás de JoyasSB</h2>
+        <!-- ✏️ Edita estos párrafos con tu historia -->
+        <p>JoyasSB nació de las ganas de ofrecer joyas de plata ley 925, 950 y 980 con carácter: piezas sobrias, urbanas y bien terminadas, que se usan todos los días y no pasan de moda.</p>
+        <p>Selecciono cada cadena, colgante y pulsera pensando en quien la va a usar. La mayoría de mis piezas son para hombre, pero también hay opciones para mujer y, sobre todo, muchas ideas para regalar.</p>
+        <p>Atiendo personalmente cada pedido: te asesoro con medidas, estilos y regalos, y el precio siempre se puede conversar. Por algo el lema es <strong>luce, regala o negocia</strong>.</p>
+        <p class="sign">— JoyasSB · @sbriitto</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Envíos y pagos ===== -->
+  <section class="block" id="envios">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Cómo comprar</p>
+        <h2 class="section-title">Envíos y pagos</h2>
+      </div>
+      <!-- ✏️ Ajusta estos textos a tus condiciones reales -->
+      <div class="info-grid">
+        <div class="info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>
+          <h3>Envíos a todo Chile</h3>
+          <p>Despachos a todo Chile con envío por pagar: el costo lo pagas al recibir según tu comuna.</p>
+        </div>
+        <div class="info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <h3>Entregas en Valparaíso</h3>
+          <p>Entregas presenciales en Valparaíso. Coordinamos punto y horario por WhatsApp.</p>
+        </div>
+        <div class="info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="M3 10h18M7 15h3"/></svg>
+          <h3>Medios de pago</h3>
+          <!-- ✏️ Confirma tus medios de pago -->
+          <p>Transferencia bancaria, o efectivo en entregas presenciales. Los envíos se despachan al confirmar el pago.</p>
+        </div>
+        <div class="info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <h3>Antes de comprar</h3>
+          <p>No hay cambios ni devoluciones, así que consulta medidas, largo y detalles por WhatsApp antes de confirmar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contacto ===== -->
+  <section class="block alt contact" id="contacto">
+    <div class="container">
+      <p class="eyebrow">Contacto</p>
+      <h2 class="big">¿Hablamos?</h2>
+      <p>Pregunta por medidas, stock, regalos o precio. Respondo por WhatsApp y en Instagram.</p>
+      <div class="contact-actions">
+        <a href="#" class="btn btn-wa js-wa" data-msg="Hola JoyasSB 👋 Tengo una consulta.">
+          <svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-wa"/></svg> +56 9 3299 8373
+        </a>
+        <a href="https://www.instagram.com/joyassb.cl/" target="_blank" rel="noopener" class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          @joyassb.cl
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <span>© <span id="year"></span> JoyasSB · Joyas de plata</span>
+      <span class="footer-tags">Elegancia · Calidad · Estilo · Confianza</span>
+    </div>
+  </footer>
+
+  <!-- Detalle de producto -->
+  <div class="detalle" id="detalle" hidden role="dialog" aria-modal="true" aria-label="Detalle del producto">
+    <div class="det-box">
+      <button class="det-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="card-img det-img"></div>
+      <div class="det-body">
+        <span class="card-type"></span>
+        <h3 class="det-name"></h3>
+        <p class="det-price"></p>
+        <dl class="det-specs"></dl>
+        <p class="det-desc"></p>
+        <a class="btn btn-wa" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-wa"/></svg> Pedir por WhatsApp</a>
+        <p class="det-note">Consultas de medidas, stock o precio por WhatsApp. No hay cambios ni devoluciones.</p>
+      </div>
+    </div>
+  </div>
+
+  <a href="#" class="wa-float js-wa" data-msg="Hola JoyasSB 👋" aria-label="Escribir por WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-wa"/></svg>
+  </a>
+
+  <!-- Íconos reutilizables (corona del logo y WhatsApp) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f7e7b0"/><stop offset=".4" stop-color="#d4af5f"/>
+        <stop offset=".65" stop-color="#9c7a2e"/><stop offset="1" stop-color="#ecd28a"/>
+      </linearGradient>
+    </defs>
+    <symbol id="i-crown" viewBox="0 0 120 72">
+      <g fill="url(#g-gold)">
+        <path d="M14 54 L6 20 L32 38 L46 12 L60 32 L74 12 L88 38 L114 20 L106 54 Z"/>
+        <circle cx="6" cy="17" r="4"/><circle cx="46" cy="9" r="4"/><circle cx="74" cy="9" r="4"/><circle cx="114" cy="17" r="4"/>
+        <path d="M60 2 L64 8 L60 14 L56 8 Z"/><path d="M60 14v14" stroke="url(#g-gold)" stroke-width="2"/>
+        <rect x="12" y="57" width="96" height="11" rx="5.5"/>
+      </g>
+      <g fill="#0a0a0a">
+        <path d="M60 38 L66 45 L60 52 L54 45 Z"/>
+        <circle cx="34" cy="62.5" r="2.4"/><circle cx="60" cy="62.5" r="2.4"/><circle cx="86" cy="62.5" r="2.4"/>
+      </g>
+    </symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.94.95-3.48-.22-.36a9.43 9.43 0 0 1-1.45-5.03c0-5.2 4.24-9.44 9.45-9.44a9.4 9.4 0 0 1 6.68 2.77 9.38 9.38 0 0 1 2.76 6.68c0 5.21-4.24 9.44-9.45 9.44zm8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.58 23.7l6.1-1.6a11.33 11.33 0 0 0 5.37 1.37h.01c6.26 0 11.36-5.1 11.37-11.36 0-3.04-1.18-5.89-3.34-8.04z"/></symbol>
+  </svg>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mantenedor — JoyasSB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,500;1,700;1,800&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { padding: 0 0 60px; }
+    .admin-top { border-bottom: 1px solid var(--line); background: var(--bg-2); }
+    .admin-top .container { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; padding-bottom: 16px; flex-wrap: wrap; }
+    .admin-top .eyebrow { margin-top: 2px; }
+    .layout { display: grid; grid-template-columns: 380px 1fr; gap: 30px; margin-top: 30px; align-items: start; }
+    .panel { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .panel h2 { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 18px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin: 14px 0 6px; }
+    input[type=text], input[type=number], select, textarea {
+      width: 100%; padding: 12px; background: var(--bg); color: var(--text);
+      border: 1px solid var(--line); border-radius: var(--radius); font: inherit; font-size: 16px;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); }
+    textarea { min-height: 80px; resize: vertical; }
+    .checks { display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap; }
+    .checks label { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--text); }
+    .checks input { width: 18px; height: 18px; accent-color: #ddd; }
+    .photo {
+      aspect-ratio: 1/1; border: 1px dashed #444; border-radius: var(--radius); background: var(--bg);
+      display: grid; place-items: center; overflow: hidden; cursor: pointer; color: var(--muted); font-size: 14px; text-align: center; padding: 10px;
+    }
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .photo-actions .btn { flex: 1; padding: 10px 8px; font-size: 11px; letter-spacing: .1em; }
+
+    .crop-modal { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.85); display: grid; place-items: center; padding: 16px; }
+    .crop-box { width: 100%; max-width: 420px; background: var(--bg-2); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 20px; max-height: 100%; overflow-y: auto; }
+    .crop-box h2 { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 6px; }
+    .crop-hint { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+    .crop-view { position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #000; border: 1px solid var(--gold); cursor: grab; touch-action: none; user-select: none; }
+    .crop-view:active { cursor: grabbing; }
+    .crop-view img { position: absolute; left: 0; top: 0; max-width: none; transform-origin: 0 0; pointer-events: none; }
+    .crop-zoom { display: flex; align-items: center; gap: 12px; margin: 16px 0 12px; color: var(--muted); font-size: 20px; }
+    .crop-zoom input { flex: 1; accent-color: var(--gold); height: 28px; }
+    .crop-presets { display: flex; gap: 8px; justify-content: center; }
+    .crop-presets .chip { padding: 8px 14px; font-size: 11px; }
+    .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .form-actions .btn { flex: 1; padding: 13px 10px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+    .status { padding: 14px 18px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 18px; font-size: 14px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+    .status.dirty { border-color: #8a7a3a; background: #1d1a0f; }
+    .status .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .status .btn { padding: 10px 16px; font-size: 11px; }
+
+    .item { display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2); margin-bottom: 10px; }
+    .item.editing { border-color: var(--gold); }
+    .thumb { width: 64px; height: 64px; border-radius: 3px; background: var(--bg-3); overflow: hidden; display: grid; place-items: center; color: #444; font-size: 11px; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .item .meta { min-width: 0; }
+    .item .meta strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+    .item .meta small { color: var(--muted); }
+    .tag { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; background: #333; margin-left: 6px; }
+    .acts { display: flex; gap: 4px; }
+    .icon-btn { background: var(--bg-3); border: 1px solid var(--line); color: var(--text); width: 36px; height: 36px; border-radius: 3px; display: grid; place-items: center; }
+    .icon-btn:hover { border-color: var(--gold); }
+    .icon-btn.del:hover { border-color: #c44; color: #f66; }
+    .icon-btn svg { width: 16px; height: 16px; }
+    .help { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .help ol { padding-left: 20px; }
+    .help code { background: var(--bg-3); padding: 1px 6px; border-radius: 3px; color: var(--text); }
+    .setup { max-width: 460px; margin: 40px auto 0; }
+    .busy { position: fixed; inset: 0; z-index: 120; background: rgba(0,0,0,.75); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; font-family: var(--font-title); letter-spacing: .15em; text-transform: uppercase; font-size: 13px; }
+    .spinner { width: 42px; height: 42px; border: 2px solid var(--gold-dim); border-top-color: var(--gold); border-radius: 50%; animation: girar .8s linear infinite; }
+    @keyframes girar { to { transform: rotate(360deg); } }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(100px); background: var(--text); color: var(--bg); padding: 12px 20px; border-radius: var(--radius); font-size: 14px; transition: transform .3s; z-index: 99; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .photo, .photo-actions { max-width: 280px; margin-left: auto; margin-right: auto; }
+    }
+    @media (max-width: 480px) {
+      .item { grid-template-columns: 52px 1fr; }
+      .thumb { width: 52px; height: 52px; }
+      .acts { grid-column: 1 / -1; justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-top">
+    <div class="container">
+      <div>
+        <div class="logo"><svg class="crown" viewBox="0 0 120 72"><use href="#i-crown"/></svg><span class="sb gold">SB</span><small>Mantenedor<br>de productos</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conectar con GitHub (una vez por aparato) -->
+  <div class="container" id="setup" hidden>
+    <form class="panel setup" id="setupForm" autocomplete="off">
+      <h2>Conectar con GitHub</h2>
+      <p class="help">Esto se hace una sola vez en cada aparato (celular, computador). Así los productos que agregues se publican solos en tu sitio.</p>
+      <label for="ghOwner">Usuario de GitHub</label>
+      <input type="text" id="ghOwner" required autocapitalize="off" spellcheck="false" placeholder="ej: joyassb">
+      <label for="ghRepo">Nombre del repositorio</label>
+      <input type="text" id="ghRepo" required autocapitalize="off" spellcheck="false" value="joyassb">
+      <label for="ghToken">Token de acceso</label>
+      <input type="password" id="ghToken" required autocapitalize="off" spellcheck="false" placeholder="github_pat_…">
+      <p class="help" style="margin-top:10px;font-size:13px">El token es como una contraseña: no lo compartas. Si no lo tienes, revisa el archivo LEEME.md.</p>
+      <div class="form-actions"><button type="submit" class="btn btn-solid">Conectar</button></div>
+    </form>
+  </div>
+
+  <div class="container layout" id="app" hidden>
+    <!-- Formulario -->
+    <form class="panel" id="form" autocomplete="off">
+      <h2 id="formTitle">Nuevo producto</h2>
+
+      <div class="photo" id="photo">Toca para subir foto</div>
+      <div class="photo-actions" id="photoActions" hidden>
+        <button type="button" class="btn" id="cambiarFoto">Cambiar foto</button>
+        <button type="button" class="btn" id="ajustarFoto">Ajustar encuadre</button>
+      </div>
+      <input type="file" id="file" accept="image/*" hidden>
+
+      <label for="nombre">Nombre *</label>
+      <input type="text" id="nombre" required maxlength="80" placeholder="Ej: Cadena Cubana 5mm">
+
+      <div class="row">
+        <div>
+          <label for="tipo">Tipo *</label>
+          <select id="tipo" required>
+            <option value="cadena">Cadena</option>
+            <option value="colgante">Colgante</option>
+            <option value="pulsera">Pulsera</option>
+          </select>
+        </div>
+        <div>
+          <label for="precio">Precio (CLP) *</label>
+          <input type="number" id="precio" required min="0" step="500" inputmode="numeric" placeholder="25000">
+        </div>
+      </div>
+
+      <div class="row3">
+        <div>
+          <label for="largo">Largo (cm)</label>
+          <input type="number" id="largo" min="0" step="0.5" inputmode="decimal" placeholder="60">
+        </div>
+        <div>
+          <label for="grosor">Grosor (mm)</label>
+          <input type="number" id="grosor" min="0" step="0.1" inputmode="decimal" placeholder="4">
+        </div>
+        <div>
+          <label for="ley">Plata</label>
+          <select id="ley">
+            <option value="">—</option>
+            <option value="925">925</option>
+            <option value="950">950</option>
+            <option value="980">980</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="descripcion">Descripción</label>
+      <textarea id="descripcion" maxlength="200" placeholder="Ej: Tejido cubano, cierre de mosquetón"></textarea>
+
+      <div class="checks">
+        <label><input type="checkbox" id="disponible" checked> Disponible</label>
+        <label><input type="checkbox" id="destacado"> Marcar como “Nuevo”</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn" id="cancel" hidden>Cancelar</button>
+        <button type="submit" class="btn btn-solid" id="submit">Agregar</button>
+      </div>
+    </form>
+
+    <!-- Lista -->
+    <div>
+      <div class="status" id="status"></div>
+      <div class="status dirty" id="pendientes" hidden>
+        <span></span>
+        <span class="btns">
+          <button class="btn" id="pendDescartar" type="button">Descartar</button>
+          <button class="btn btn-solid" id="pendPublicar" type="button">Publicarlos</button>
+        </span>
+      </div>
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <!-- Editor de encuadre -->
+  <div class="crop-modal" id="cropModal" hidden>
+    <div class="crop-box">
+      <h2>Ajustar foto</h2>
+      <p class="crop-hint">Arrastra la foto para moverla y usa el zoom. Así se verá en el catálogo.</p>
+      <div class="crop-view" id="cropView"><img id="cropImg" alt="" draggable="false"></div>
+      <div class="crop-zoom">
+        <span>−</span>
+        <input type="range" id="cropZoom" min="0" max="1000" value="0" aria-label="Zoom">
+        <span>+</span>
+      </div>
+      <div class="crop-presets">
+        <button type="button" class="chip" id="cropLlenar">Llenar cuadro</button>
+        <button type="button" class="chip" id="cropEntera">Foto entera</button>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="cropCancel">Cancelar</button>
+        <button type="button" class="btn btn-solid" id="cropOk">Usar foto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="busy" id="busy" hidden><div class="spinner"></div><p id="busyText">Guardando…</p></div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Íconos reutilizables (corona del logo y WhatsApp) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f7e7b0"/><stop offset=".4" stop-color="#d4af5f"/>
+        <stop offset=".65" stop-color="#9c7a2e"/><stop offset="1" stop-color="#ecd28a"/>
+      </linearGradient>
+    </defs>
+    <symbol id="i-crown" viewBox="0 0 120 72">
+      <g fill="url(#g-gold)">
+        <path d="M14 54 L6 20 L32 38 L46 12 L60 32 L74 12 L88 38 L114 20 L106 54 Z"/>
+        <circle cx="6" cy="17" r="4"/><circle cx="46" cy="9" r="4"/><circle cx="74" cy="9" r="4"/><circle cx="114" cy="17" r="4"/>
+        <path d="M60 2 L64 8 L60 14 L56 8 Z"/><path d="M60 14v14" stroke="url(#g-gold)" stroke-width="2"/>
+        <rect x="12" y="57" width="96" height="11" rx="5.5"/>
+      </g>
+      <g fill="#0a0a0a">
+        <path d="M60 38 L66 45 L60 52 L54 45 Z"/>
+        <circle cx="34" cy="62.5" r="2.4"/><circle cx="60" cy="62.5" r="2.4"/><circle cx="86" cy="62.5" r="2.4"/>
+      </g>
+    </symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.94.95-3.48-.22-.36a9.43 9.43 0 0 1-1.45-5.03c0-5.2 4.24-9.44 9.45-9.44a9.4 9.4 0 0 1 6.68 2.77 9.38 9.38 0 0 1 2.76 6.68c0 5.21-4.24 9.44-9.45 9.44zm8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.58 23.7l6.1-1.6a11.33 11.33 0 0 0 5.37 1.37h.01c6.26 0 11.36-5.1 11.37-11.36 0-3.04-1.18-5.89-3.34-8.04z"/></symbol>
+  </svg>
+
+  <script src="admin.js"></script>
+</body>
+</html>
