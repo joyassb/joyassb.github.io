@@ -42,7 +42,8 @@ window.PRODUCTOS = [
     "grosor": 4,
     "ley": "925",
     "oferta": 25000,
-    "estado": "disponible"
+    "estado": "disponible",
+    "unidad": "cu"
   },
   {
     "id": "pmvl3pin3",
