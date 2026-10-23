@@ -19,7 +19,7 @@
     .panel { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
     .panel h2 { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 18px; }
     label { display: block; font-size: 13px; color: var(--muted); margin: 14px 0 6px; }
-    input[type=text], input[type=number], select, textarea {
+    input[type=text], input[type=number], input[type=password], select, textarea {
       width: 100%; padding: 12px; background: var(--bg); color: var(--text);
       border: 1px solid var(--line); border-radius: var(--radius); font: inherit; font-size: 16px;
     }
@@ -106,7 +106,7 @@
       <h2>Conectar con GitHub</h2>
       <p class="help">Esto se hace una sola vez en cada aparato (celular, computador). Así los productos que agregues se publican solos en tu sitio.</p>
       <label for="ghOwner">Usuario de GitHub</label>
-      <input type="text" id="ghOwner" required autocapitalize="off" spellcheck="false" placeholder="ej: joyassb">
+      <input type="text" id="ghOwner" required autocapitalize="off" spellcheck="false" value="ssstfnyy">
       <label for="ghRepo">Nombre del repositorio</label>
       <input type="text" id="ghRepo" required autocapitalize="off" spellcheck="false" value="joyassb">
       <label for="ghToken">Token de acceso</label>
