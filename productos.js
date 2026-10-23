@@ -1,6 +1,20 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvl4nut2",
+    "nombre": "Cadena Cartier + Colgante Mercedes",
+    "tipo": "cadena",
+    "precio": 25000,
+    "descripcion": "",
+    "largo": 60,
+    "grosor": 4,
+    "ley": "925",
+    "imagen": "img/productos/pmvl4nut2-mvl4nut2.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": false
+  },
+  {
     "id": "pmvl2hj8m",
     "nombre": "Cadena Caracol + Cadena Grumet + Colgantes Mercedes",
     "tipo": "cadena",
