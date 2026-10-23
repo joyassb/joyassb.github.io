@@ -34,7 +34,7 @@ window.PRODUCTOS = [
     "nombre": "Colgante Mercedes + Cadena Caracol o Cadena Grumet",
     "tipo": "cadena",
     "precio": 30000,
-    "descripcion": "Valor oferta c/u (Cadena + Colgante)",
+    "descripcion": "Valor oferta ( 1 Cadena + 1 Colgante)",
     "imagen": "img/productos/pmvl2hj8m-mvl522bo.jpg",
     "disponible": true,
     "destacado": true,
