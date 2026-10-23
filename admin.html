@@ -48,6 +48,9 @@
     .crop-zoom { display: flex; align-items: center; gap: 12px; margin: 16px 0 12px; color: var(--muted); font-size: 20px; }
     .crop-zoom input { flex: 1; accent-color: var(--gold); height: 28px; }
     .crop-presets { display: flex; gap: 8px; justify-content: center; }
+    .redes-box .crop-presets { margin-bottom: 14px; }
+    .redes-preview { display: grid; place-items: center; min-height: 200px; color: var(--muted); }
+    .redes-preview img { max-width: 100%; max-height: 58vh; border: 1px solid var(--line); }
     .crop-presets .chip { padding: 8px 14px; font-size: 11px; }
     .form-actions { display: flex; gap: 10px; margin-top: 20px; }
     .form-actions .btn { flex: 1; padding: 13px 10px; }
@@ -204,6 +207,22 @@
         </span>
       </div>
       <div id="list"></div>
+    </div>
+  </div>
+
+  <!-- Imagen para redes sociales -->
+  <div class="crop-modal" id="redesModal" hidden>
+    <div class="crop-box redes-box">
+      <h2>Imagen para redes</h2>
+      <div class="crop-presets" id="redesFormato">
+        <button type="button" class="chip active" data-formato="historia">Historia</button>
+        <button type="button" class="chip" data-formato="post">Publicación</button>
+      </div>
+      <div class="redes-preview" id="redesPreview">Generando…</div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="redesCerrar">Cerrar</button>
+        <button type="button" class="btn btn-solid" id="redesGuardar">Guardar</button>
+      </div>
     </div>
   </div>
 

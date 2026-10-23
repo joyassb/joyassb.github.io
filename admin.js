@@ -401,6 +401,7 @@ const ICON = {
   down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9l6 6 6-6"/></svg>',
   vendido: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg>',
   undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>',
+  redes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>',
   del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>',
 };
 
@@ -433,6 +434,7 @@ function render() {
           <button class="icon-btn" title="Subir" data-act="up" data-i="${i}" ${i === 0 ? "disabled" : ""}>${ICON.up}</button>
           <button class="icon-btn" title="Bajar" data-act="down" data-i="${i}" ${i === productos.length - 1 ? "disabled" : ""}>${ICON.down}</button>
           <button class="icon-btn" title="${estado(p) === "vendido" ? "Volver a disponible" : "Marcar como vendido"}" data-act="vendido" data-i="${i}">${estado(p) === "vendido" ? ICON.undo : ICON.vendido}</button>
+          <button class="icon-btn" title="Imagen para redes" data-act="redes" data-i="${i}">${ICON.redes}</button>
           <button class="icon-btn" title="Editar" data-act="edit" data-i="${i}">${ICON.edit}</button>
           <button class="icon-btn del" title="Borrar" data-act="del" data-i="${i}">${ICON.del}</button>
         </div>
@@ -454,6 +456,7 @@ $("list").addEventListener("click", async (e) => {
   const p = productos[Number(b.dataset.i)];
   switch (b.dataset.act) {
     case "edit": return editar(p.id);
+    case "redes": return abrirRedes(p);
     case "vendido": {
       const nuevo = estado(p) === "vendido" ? "disponible" : "vendido";
       const ok = await ocupado("Guardando…", () => publicar(
@@ -510,6 +513,233 @@ async function revisarBorradorAntiguo() {
     aviso.hidden = true;
   };
 }
+
+// ---------- Imagen para redes sociales ----------
+// Dibuja en un canvas una pieza lista para Instagram con logo, foto, medidas y precio.
+const FORMATOS = {
+  historia: { W: 1080, H: 1920, logoY: 180, logo: 1, foto: 760, fotoY: 440, s: 1, pieY: 1730 },
+  post: { W: 1080, H: 1350, logoY: 46, logo: 0.62, foto: 640, fotoY: 236, s: 0.82, pieY: 1300 },
+};
+const CONTACTO = { whatsapp: "+56 9 3299 8373", instagram: "@joyassb.cl", sitio: "joyassb.github.io" };
+const ORO = ["#f7e7b0", "#d4af5f", "#9c7a2e", "#ecd28a"];
+const CORONA_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 72"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${ORO[0]}"/><stop offset=".4" stop-color="${ORO[1]}"/><stop offset=".65" stop-color="${ORO[2]}"/><stop offset="1" stop-color="${ORO[3]}"/></linearGradient></defs><g fill="url(#g)"><path d="M14 54 L6 20 L32 38 L46 12 L60 32 L74 12 L88 38 L114 20 L106 54 Z"/><circle cx="6" cy="17" r="4"/><circle cx="46" cy="9" r="4"/><circle cx="74" cy="9" r="4"/><circle cx="114" cy="17" r="4"/><path d="M60 2 L64 8 L60 14 L56 8 Z"/><rect x="12" y="57" width="96" height="11" rx="5.5"/></g><g fill="#0a0a0a"><path d="M60 38 L66 45 L60 52 L54 45 Z"/><circle cx="34" cy="62.5" r="2.4"/><circle cx="60" cy="62.5" r="2.4"/><circle cx="86" cy="62.5" r="2.4"/></g></svg>`;
+
+const cargarImagen = (src) => new Promise((res, rej) => {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => res(img);
+  img.onerror = rej;
+  img.src = src;
+});
+
+function oroLineal(ctx, x0, y0, x1, y1) {
+  const g = ctx.createLinearGradient(x0, y0, x1, y1);
+  ORO.forEach((c, i) => g.addColorStop([0, 0.4, 0.65, 1][i], c));
+  return g;
+}
+
+// Texto centrado con espaciado entre letras (si el navegador lo permite)
+function texto(ctx, str, x, y, { font, color, espaciado = 0, align = "center" }) {
+  ctx.font = font;
+  ctx.fillStyle = color;
+  ctx.textAlign = align;
+  if ("letterSpacing" in ctx) ctx.letterSpacing = `${espaciado}px`;
+  // el espaciado agrega un hueco al final; se compensa para que quede centrado
+  ctx.fillText(str, align === "center" ? x + espaciado / 2 : x, y);
+  if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+}
+
+function lineas(ctx, str, ancho, max) {
+  const palabras = str.split(/\s+/);
+  const out = [];
+  let actual = "";
+  for (const w of palabras) {
+    const prueba = actual ? actual + " " + w : w;
+    if (ctx.measureText(prueba).width > ancho && actual) { out.push(actual); actual = w; }
+    else actual = prueba;
+  }
+  if (actual) out.push(actual);
+  if (out.length > max) {
+    out.length = max;
+    while (ctx.measureText(out[max - 1] + "…").width > ancho) out[max - 1] = out[max - 1].slice(0, -1);
+    out[max - 1] = out[max - 1].trimEnd() + "…";
+  }
+  return out;
+}
+
+async function dibujarRedes(p, formato) {
+  const F = FORMATOS[formato], s = F.s, cx = F.W / 2;
+  await Promise.all([
+    document.fonts.load('italic 800 100px "Playfair Display"'),
+    document.fonts.load('300 40px "Montserrat"'),
+    document.fonts.load('400 40px "Montserrat"'),
+    document.fonts.load('500 40px "Montserrat"'),
+  ]).catch(() => {});
+  const [corona, foto] = await Promise.all([
+    cargarImagen("data:image/svg+xml;charset=utf-8," + encodeURIComponent(CORONA_SVG)),
+    p.imagen ? cargarImagen(urlImg(p.imagen)).catch(() => null) : null,
+  ]);
+
+  const c = document.createElement("canvas");
+  c.width = F.W; c.height = F.H;
+  const ctx = c.getContext("2d");
+
+  // Fondo negro con brillo dorado suave
+  ctx.fillStyle = "#0a0a0a";
+  ctx.fillRect(0, 0, F.W, F.H);
+  const brillo = ctx.createRadialGradient(cx, F.fotoY + F.foto / 2, 50, cx, F.fotoY + F.foto / 2, F.H * 0.6);
+  brillo.addColorStop(0, "rgba(212,175,95,.16)");
+  brillo.addColorStop(1, "rgba(212,175,95,0)");
+  ctx.fillStyle = brillo;
+  ctx.fillRect(0, 0, F.W, F.H);
+
+  // Logo
+  const L = F.logo, cw = 130 * L, ch = cw * 0.6;
+  ctx.drawImage(corona, cx - cw / 2, F.logoY, cw, ch);
+  const sbY = F.logoY + ch + 92 * L;
+  ctx.font = `italic 800 ${110 * L}px "Playfair Display"`;
+  const sbW = ctx.measureText("SB").width;
+  texto(ctx, "SB", cx, sbY, { font: ctx.font, color: oroLineal(ctx, cx - sbW / 2, sbY - 90 * L, cx + sbW / 2, sbY) });
+  texto(ctx, "JOYAS DE PLATA", cx, sbY + 46 * L, { font: `400 ${24 * L}px "Montserrat"`, color: ORO[1], espaciado: 10 * L });
+
+  // Foto con marco dorado
+  const fx = cx - F.foto / 2, fy = F.fotoY;
+  if (foto) {
+    const k = Math.max(F.foto / foto.naturalWidth, F.foto / foto.naturalHeight);
+    const w = foto.naturalWidth * k, h = foto.naturalHeight * k;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(fx, fy, F.foto, F.foto); ctx.clip();
+    if (estado(p) !== "disponible") ctx.filter = "grayscale(1) brightness(.6)";
+    ctx.drawImage(foto, cx - w / 2, fy + F.foto / 2 - h / 2, w, h);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = "#161616";
+    ctx.fillRect(fx, fy, F.foto, F.foto);
+  }
+  ctx.strokeStyle = oroLineal(ctx, fx, fy, fx + F.foto, fy + F.foto);
+  ctx.lineWidth = 3;
+  ctx.strokeRect(fx - 12, fy - 12, F.foto + 24, F.foto + 24);
+
+  // Etiqueta sobre la foto: estado, descuento o nuevo
+  const oferta = p.oferta > 0 && p.oferta < p.precio;
+  const etiqueta =
+    ESTADOS[estado(p)] ? { t: ESTADOS[estado(p)].toUpperCase(), bg: "#3a3a3a", fg: ORO[1] }
+    : oferta ? { t: `-${Math.round((1 - p.oferta / p.precio) * 100)}%`, bg: "#a3221c", fg: "#fff" }
+    : p.destacado ? { t: "NUEVO", bg: oroLineal(ctx, fx, fy, fx + 200, fy + 60), fg: "#120d02" } : null;
+  if (etiqueta) {
+    ctx.font = `500 ${30 * s}px "Montserrat"`;
+    if ("letterSpacing" in ctx) ctx.letterSpacing = `${6 * s}px`;
+    const ew = ctx.measureText(etiqueta.t).width + 44 * s, eh = 60 * s;
+    ctx.fillStyle = etiqueta.bg;
+    ctx.fillRect(fx + 24, fy + 24, ew, eh);
+    texto(ctx, etiqueta.t, fx + 24 + ew / 2, fy + 24 + eh / 2 + 11 * s, { font: ctx.font, color: etiqueta.fg, espaciado: 6 * s });
+  }
+
+  // Textos bajo la foto
+  let y = fy + F.foto + 80 * s;
+  texto(ctx, (TIPOS[p.tipo] || "").toUpperCase(), cx, y, { font: `400 ${26 * s}px "Montserrat"`, color: "#9a9a9a", espaciado: 10 * s });
+  ctx.font = `400 ${54 * s}px "Montserrat"`;
+  for (const l of lineas(ctx, p.nombre, F.W - 160, 2)) {
+    y += 66 * s;
+    texto(ctx, l, cx, y, { font: ctx.font, color: "#f2f2f2" });
+  }
+  const specs = [
+    p.ley && `Plata ${p.ley}`,
+    p.largo && `${String(p.largo).replace(".", ",")} cm`,
+    p.grosor && `${String(p.grosor).replace(".", ",")} mm`,
+  ].filter(Boolean).join("  ·  ");
+  if (specs) {
+    y += 60 * s;
+    texto(ctx, specs, cx, y, { font: `400 ${34 * s}px "Montserrat"`, color: ORO[1], espaciado: 2 * s });
+  }
+
+  // Precio (tachado si está vendido; con el original tachado si hay descuento)
+  y += 108 * s;
+  const vendido = estado(p) !== "disponible";
+  const final = clp(oferta ? p.oferta : p.precio);
+  ctx.font = `300 ${88 * s}px "Montserrat"`;
+  const wFinal = ctx.measureText(final).width;
+  let xFinal = cx - wFinal / 2;
+  if (oferta) {
+    ctx.font = `300 ${46 * s}px "Montserrat"`;
+    const antes = clp(p.precio), wAntes = ctx.measureText(antes).width, gap = 26 * s;
+    const x0 = cx - (wAntes + gap + wFinal) / 2;
+    texto(ctx, antes, x0, y, { font: ctx.font, color: "#8a8a8a", align: "left" });
+    ctx.fillStyle = "#8a8a8a";
+    ctx.fillRect(x0, y - 16 * s, wAntes, 3 * s);
+    xFinal = x0 + wAntes + gap;
+  }
+  texto(ctx, final, xFinal, y, {
+    font: `300 ${88 * s}px "Montserrat"`,
+    color: vendido ? "#8a8a8a" : oroLineal(ctx, xFinal, y - 80 * s, xFinal + wFinal, y),
+    align: "left",
+  });
+  if (vendido) { ctx.fillStyle = "#8a8a8a"; ctx.fillRect(xFinal, y - 30 * s, wFinal, 4 * s); }
+
+  // Pie: cómo comprar
+  const pie = F.pieY;
+  ctx.fillStyle = oroLineal(ctx, 140, 0, F.W - 140, 0);
+  ctx.globalAlpha = 0.5;
+  ctx.fillRect(140, pie - 70 * s, F.W - 280, 1.5);
+  ctx.globalAlpha = 1;
+  texto(ctx, vendido ? `Pide uno similar por WhatsApp ${CONTACTO.whatsapp}` : `Pide por WhatsApp ${CONTACTO.whatsapp}`, cx, pie - 18 * s,
+    { font: `500 ${30 * s}px "Montserrat"`, color: "#f2f2f2" });
+  texto(ctx, `${CONTACTO.instagram}  ·  ${CONTACTO.sitio}`, cx, pie + 30 * s,
+    { font: `400 ${26 * s}px "Montserrat"`, color: "#9a9a9a", espaciado: 2 * s });
+
+  return new Promise((res) => c.toBlob(res, "image/jpeg", 0.92));
+}
+
+let redes = { p: null, formato: "historia", blob: null, url: "" };
+
+async function generarRedes() {
+  const { p, formato } = redes;
+  $("redesPreview").textContent = "Generando…";
+  try {
+    const blob = await dibujarRedes(p, formato);
+    if (redes.p !== p || redes.formato !== formato) return; // cambió mientras se dibujaba
+    if (redes.url) URL.revokeObjectURL(redes.url);
+    redes.blob = blob;
+    redes.url = URL.createObjectURL(blob);
+    $("redesPreview").innerHTML = `<img src="${redes.url}" alt="Vista previa">`;
+  } catch (e) {
+    console.error(e);
+    $("redesPreview").textContent = "No se pudo generar la imagen.";
+  }
+}
+
+function abrirRedes(p) {
+  redes.p = p;
+  redes.blob = null;
+  $("redesModal").hidden = false;
+  generarRedes();
+}
+
+$("redesFormato").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-formato]");
+  if (!b || b.dataset.formato === redes.formato) return;
+  redes.formato = b.dataset.formato;
+  redes.blob = null;
+  $("redesFormato").querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c === b));
+  generarRedes();
+});
+
+$("redesCerrar").addEventListener("click", () => { $("redesModal").hidden = true; });
+
+// En el celular abre el menú de compartir (Instagram, Guardar imagen…); si no, descarga.
+$("redesGuardar").addEventListener("click", async () => {
+  if (!redes.blob) return;
+  const nombre = `joyassb-${redes.p.nombre.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${redes.formato}.jpg`;
+  const archivo = new File([redes.blob], nombre, { type: "image/jpeg" });
+  if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+    try { await navigator.share({ files: [archivo] }); } catch (e) { if (e.name !== "AbortError") toast("No se pudo compartir"); }
+    return;
+  }
+  const a = document.createElement("a");
+  a.href = redes.url;
+  a.download = nombre;
+  a.click();
+});
 
 // ---------- Aviso ----------
 let toastTimer;
