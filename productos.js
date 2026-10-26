@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvps11aw",
+    "nombre": "Cadena + Pulsera",
+    "tipo": "cadena",
+    "precio": 100000,
+    "oferta": null,
+    "unidad": null,
+    "descripcion": "Cadena + Pulsera Cartier 1 cm de grosor",
+    "largo": 67,
+    "grosor": 10,
+    "ley": "925",
+    "imagen": "img/productos/pmvps11aw-mvps11aw.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvprxhmu",
     "nombre": "Pulsera Caracol",
     "tipo": "pulsera",
