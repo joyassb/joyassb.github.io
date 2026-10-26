@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvpixmi0",
+    "nombre": "Colgante Real Hasta La Muerte",
+    "tipo": "colgante",
+    "precio": 20000,
+    "oferta": 15000,
+    "unidad": "cu",
+    "descripcion": "",
+    "largo": 4,
+    "grosor": 7,
+    "ley": "925",
+    "imagen": "img/productos/pmvpixmi0-mvpixmi1.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvpis1u5",
     "nombre": "Pulsera Gucci",
     "tipo": "pulsera",
