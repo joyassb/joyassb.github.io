@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvpukxzd",
+    "nombre": "Cadena + Colgante XL",
+    "tipo": "cadena",
+    "precio": 100000,
+    "oferta": 90000,
+    "unidad": null,
+    "descripcion": "",
+    "largo": 67,
+    "grosor": 10,
+    "ley": "925",
+    "imagen": "img/productos/pmvpukxzd-mvpukxzd.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvps9n36",
     "nombre": "Cadena + Colgante",
     "tipo": "cadena",
