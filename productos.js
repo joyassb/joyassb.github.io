@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvprxhmu",
+    "nombre": "Pulsera Caracol",
+    "tipo": "pulsera",
+    "precio": 25000,
+    "oferta": 17000,
+    "unidad": null,
+    "descripcion": "",
+    "largo": 21,
+    "grosor": 5,
+    "ley": "925",
+    "imagen": "img/productos/pmvprxhmu-mvprxhmu.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvpixmi0",
     "nombre": "Colgante Real Hasta La Muerte",
     "tipo": "colgante",
