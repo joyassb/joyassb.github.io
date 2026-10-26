@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvpij0mh",
+    "nombre": "Colgante XL San Benito",
+    "tipo": "colgante",
+    "precio": 25000,
+    "oferta": 20000,
+    "unidad": null,
+    "descripcion": "",
+    "largo": 6,
+    "grosor": 5,
+    "ley": "925",
+    "imagen": "img/productos/pmvpij0mh-mvpij0mh.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvl4xyxk",
     "nombre": "Pulsera Doblegrumett",
     "tipo": "pulsera",
