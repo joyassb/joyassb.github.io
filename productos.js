@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvpis1u5",
+    "nombre": "Pulsera Gucci",
+    "tipo": "pulsera",
+    "precio": 13000,
+    "oferta": 10000,
+    "unidad": null,
+    "descripcion": "",
+    "largo": 21,
+    "grosor": 4,
+    "ley": "925",
+    "imagen": "img/productos/pmvpis1u5-mvpis1u5.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvpiq6a2",
     "nombre": "Pulsera Rolo Facetado",
     "tipo": "pulsera",
