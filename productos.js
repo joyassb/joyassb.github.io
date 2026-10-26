@@ -1,6 +1,22 @@
 // Archivo generado por el mantenedor (admin.html). No es necesario editarlo a mano.
 window.PRODUCTOS = [
   {
+    "id": "pmvpiq6a2",
+    "nombre": "Pulsera Rolo Facetado",
+    "tipo": "pulsera",
+    "precio": 13000,
+    "oferta": 10000,
+    "unidad": null,
+    "descripcion": "",
+    "largo": 20,
+    "grosor": 3,
+    "ley": "925",
+    "imagen": "img/productos/pmvpiq6a2-mvpiq6a2.jpg",
+    "estado": "disponible",
+    "disponible": true,
+    "destacado": true
+  },
+  {
     "id": "pmvpij0mh",
     "nombre": "Colgante XL San Benito",
     "tipo": "colgante",
